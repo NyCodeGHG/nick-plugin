@@ -2,6 +2,8 @@ import org.apache.commons.io.output.ByteArrayOutputStream
 import org.apache.tools.ant.filters.FixCrLfFilter
 import org.apache.tools.ant.filters.ReplaceTokens
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import java.util.Properties
+import java.io.FileReader
 
 plugins {
     kotlin("jvm") version "1.4.21"
@@ -9,7 +11,7 @@ plugins {
     id("com.github.gmazzo.buildconfig") version "2.0.2"
 }
 
-group = "org.example"
+group = "de.nycode"
 version = "1.0.0"
 
 repositories {
@@ -31,7 +33,7 @@ dependencies {
 
 buildConfig {
     className("BuildConfig")
-    packageName("$group.$name")
+    packageName("$group.nickplugin")
     val commit = getGitHash()
     val branch = getGitBranch()
     buildConfigField("String", "GIT_COMMIT", "\"$commit\"")
@@ -41,7 +43,7 @@ buildConfig {
 fun getGitHash(): String {
     val stdout = ByteArrayOutputStream()
     exec {
-        commandLine( "git", "rev-parse", "--short", "HEAD")
+        commandLine("git", "rev-parse", "--short", "HEAD")
         standardOutput = stdout
     }
     return stdout.toString("UTF-8").trim()
@@ -50,13 +52,26 @@ fun getGitHash(): String {
 fun getGitBranch(): String {
     val stdout = ByteArrayOutputStream()
     exec {
-        commandLine( "git", "rev-parse", "--abbrev-ref", "HEAD")
+        commandLine("git", "rev-parse", "--abbrev-ref", "HEAD")
         standardOutput = stdout
     }
     return stdout.toString("UTF-8").trim()
 }
 
+val properties = Properties()
+properties.load(FileReader(File("local.properties")))
+val pluginDir: String? = properties.getProperty("pluginDir", null)
+
 tasks {
+    if (pluginDir != null) {
+        val copyToBin = register<Copy>("copyJarToBin") {
+            from("build/libs/nick-plugin-1.0.0-all.jar")
+            into(pluginDir)
+        }
+        build {
+            dependsOn(copyToBin)
+        }
+    }
     processResources {
         filter(FixCrLfFilter::class)
         filter(ReplaceTokens::class, "tokens" to mapOf("version" to project.version))

@@ -1,6 +1,12 @@
-name: ExamplePlugin
+name: Nick
 api-version: 1.16
 authors:
-  - Me
-main: com.example.exampleplugin
+  - NyCode
+main: de.nycode.nickplugin.NickPlugin
 version: @version@
+database: true
+
+permissions:
+  nick.use:
+    default: false
+    description: Allows the usage of the /nick command

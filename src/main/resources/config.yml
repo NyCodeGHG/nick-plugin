@@ -1,0 +1,6 @@
+# Your database settings
+database:
+  # SQLite is the only supported provider at the moment
+  provider: SQLite
+  # Only used when selecting SQLite
+  file: sqlite.db
