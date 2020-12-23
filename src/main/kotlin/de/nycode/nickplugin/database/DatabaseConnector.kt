@@ -37,4 +37,5 @@ object DatabaseConnector {
         }
     }
 
+    fun currentProvider() = provider
 }

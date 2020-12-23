@@ -4,3 +4,10 @@ database:
   provider: SQLite
   # Only used when selecting SQLite
   file: sqlite.db
+  # Only used when using an SQL Database
+  database-name: minecraft_nick
+
+nicknames:
+  # Currently only the file provider is supported
+  provider: file
+  filename: nicknames.json

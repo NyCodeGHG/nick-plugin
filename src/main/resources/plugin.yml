@@ -10,3 +10,8 @@ permissions:
   nick.use:
     default: false
     description: Allows the usage of the /nick command
+
+commands:
+  nick:
+    aliases:
+      - nickname

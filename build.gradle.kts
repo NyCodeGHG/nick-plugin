@@ -7,8 +7,10 @@ import java.io.FileReader
 
 plugins {
     kotlin("jvm") version "1.4.21"
+    kotlin("plugin.serialization") version "1.4.21"
     id("com.github.johnrengelman.shadow") version "6.1.0"
     id("com.github.gmazzo.buildconfig") version "2.0.2"
+    idea
 }
 
 group = "de.nycode"
@@ -17,6 +19,7 @@ version = "1.0.0"
 repositories {
     jcenter()
     maven(url = "https://papermc.io/repo/repository/maven-public/")
+    maven(url = "https://repo.dmulloy2.net/nexus/repository/public/")
 }
 
 val minecraft_version: String by project
@@ -24,7 +27,7 @@ val minecraft_version: String by project
 dependencies {
     // PaperMC Dependency
     compileOnly("com.destroystokyo.paper", "paper-api", "$minecraft_version-R0.1-SNAPSHOT")
-
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.0.1")
     // Add your dependencies here
     // Examples
     // implementation("io.ktor", "ktor-client", "1.4.0") // Would be shaded into the final jar
@@ -64,12 +67,10 @@ val pluginDir: String? = properties.getProperty("pluginDir", null)
 
 tasks {
     if (pluginDir != null) {
-        val copyToBin = register<Copy>("copyJarToBin") {
+        register<Copy>("copyJarToBin") {
             from("build/libs/nick-plugin-1.0.0-all.jar")
             into(pluginDir)
-        }
-        build {
-            dependsOn(copyToBin)
+            dependsOn(build)
         }
     }
     processResources {
@@ -88,5 +89,12 @@ tasks {
         kotlinOptions {
             jvmTarget = "1.8"
         }
+    }
+}
+
+idea {
+    module {
+        isDownloadJavadoc = true
+        isDownloadSources = true
     }
 }

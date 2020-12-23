@@ -1,6 +1,8 @@
 package de.nycode.nickplugin
 
+import de.nycode.nickplugin.commands.NickCommandExecutor
 import de.nycode.nickplugin.database.DatabaseConnector
+import de.nycode.nickplugin.io.NicknameLoader
 import org.bukkit.plugin.java.JavaPlugin
 
 class NickPlugin : JavaPlugin() {
@@ -18,9 +20,15 @@ class NickPlugin : JavaPlugin() {
     override fun onEnable() {
         printSystemInformation()
         DatabaseConnector.connect()
+        NicknameLoader.load()
+        registerCommands()
     }
 
     private fun printSystemInformation() {
-        slF4JLogger.info("Version: ${description.version}-${BuildConfig.GIT_COMMIT} on ${BuildConfig.GIT_BRANCH}")
+        slF4JLogger.info("Version: ${description.version}-${BuildConfig.GIT_COMMIT}@${BuildConfig.GIT_BRANCH}")
+    }
+
+    private fun registerCommands() {
+        getCommand("nick")?.setExecutor(NickCommandExecutor())
     }
 }
