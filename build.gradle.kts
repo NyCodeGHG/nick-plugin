@@ -27,6 +27,7 @@ val minecraft_version: String by project
 dependencies {
     // PaperMC Dependency
     compileOnly("com.destroystokyo.paper", "paper-api", "$minecraft_version-R0.1-SNAPSHOT")
+    compileOnly("com.comphenix.protocol", "ProtocolLib", "4.6.0-SNAPSHOT")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.0.1")
     // Add your dependencies here
     // Examples

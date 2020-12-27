@@ -28,7 +28,8 @@ object SQLiteProvider : DatabaseProvider {
                     "    uuid      blob PRIMARY KEY," +
                     "    name      VARCHAR(16) NOT NULL," +
                     "    nick_uuid blob        NOT NULL," +
-                    "    nick_name VARCHAR(16) NOT NULL" +
+                    "    nick_name VARCHAR(16) NOT NULL," +
+                    "    remove    INTEGER DEFAULT 0 NOT NULL" +
                     ");"
         )
     }
@@ -48,20 +49,26 @@ object SQLiteProvider : DatabaseProvider {
             val name = result.getString("name")
             val nickUUID = result.getBytes("nick_uuid").toUUID()
             val nickname = result.getString("nick_name")
+            val remove = when (result.getInt("remove")) {
+                0 -> false
+                1 -> true
+                else -> false
+            }
 
-            return NickedPlayer(name, uuid, nickUUID, nickname)
+            return NickedPlayer(name, uuid, nickUUID, nickname, remove)
         }
         return null
     }
 
     override fun saveNickedPlayer(nickedPlayer: NickedPlayer) {
         val statement =
-            connection?.prepareStatement("INSERT INTO nicks (uuid, name, nick_uuid, nick_name) VALUES (?, ?, ?, ?)")
+            connection?.prepareStatement("INSERT INTO nicks (uuid, name, nick_uuid, nick_name, remove) VALUES (?, ?, ?, ?, ?)")
 
         statement?.setBytes(1, nickedPlayer.uuid.toByteArray())
         statement?.setString(2, nickedPlayer.name)
         statement?.setBytes(3, nickedPlayer.nickUUID.toByteArray())
         statement?.setString(4, nickedPlayer.nickname)
+        statement?.setInt(5, if (nickedPlayer.remove) 1 else 0)
 
         statement?.executeUpdate()
     }
@@ -77,6 +84,13 @@ object SQLiteProvider : DatabaseProvider {
 
     override fun isNicknameInUse(nickname: Nickname): Boolean {
         TODO("Not yet implemented")
+    }
+
+    override fun setToBeRemovedPlayer(uniqueId: UUID) {
+        val statement =
+            connection?.prepareStatement("UPDATE nicks SET remove = TRUE WHERE uuid = ?")
+        statement?.setBytes(1, uniqueId.toByteArray())
+        statement?.executeUpdate()
     }
 }
 

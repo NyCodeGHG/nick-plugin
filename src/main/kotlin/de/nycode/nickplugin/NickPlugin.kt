@@ -2,7 +2,7 @@ package de.nycode.nickplugin
 
 import de.nycode.nickplugin.commands.NickCommandExecutor
 import de.nycode.nickplugin.database.DatabaseConnector
-import de.nycode.nickplugin.io.NicknameLoader
+import de.nycode.nickplugin.nicknames.NicknameLoader
 import org.bukkit.plugin.java.JavaPlugin
 
 class NickPlugin : JavaPlugin() {
@@ -20,8 +20,12 @@ class NickPlugin : JavaPlugin() {
     override fun onEnable() {
         printSystemInformation()
         DatabaseConnector.connect()
-        NicknameLoader.load()
+        NicknameLoader.currentProvider().reloadNicknames()
         registerCommands()
+    }
+
+    override fun onDisable() {
+        DatabaseConnector.currentProvider().close()
     }
 
     private fun printSystemInformation() {

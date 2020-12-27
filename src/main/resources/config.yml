@@ -1,13 +1,14 @@
 # Your database settings
 database:
-  # SQLite is the only supported provider at the moment
+  # Currently supported providers:
+  # - SQLite
   provider: SQLite
   # Only used when selecting SQLite
   file: sqlite.db
-  # Only used when using an SQL Database
+  # Only used when using a non file-based SQL Database
   database-name: minecraft_nick
 
 nicknames:
-  # Currently only the file provider is supported
-  provider: file
-  filename: nicknames.json
+  # Currently supported providers:
+  # - json-file
+  provider: json-file

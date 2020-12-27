@@ -41,4 +41,6 @@ interface DatabaseProvider {
     fun isPlayerNicked(uuid: UUID): Boolean {
         return getNickedPlayer(uuid) != null
     }
+
+    fun setToBeRemovedPlayer(uniqueId: UUID)
 }

@@ -5,6 +5,8 @@ authors:
 main: de.nycode.nickplugin.NickPlugin
 version: @version@
 database: true
+depend:
+  - ProtocolLib
 
 permissions:
   nick.use:

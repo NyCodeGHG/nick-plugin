@@ -1,4 +1,4 @@
-package de.nycode.nickplugin.io
+package de.nycode.nickplugin.nicknames
 
 import de.nycode.nickplugin.NickPlugin
 import de.nycode.nickplugin.model.Nickname
