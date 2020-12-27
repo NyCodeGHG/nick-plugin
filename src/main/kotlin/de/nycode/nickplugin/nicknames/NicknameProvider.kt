@@ -4,7 +4,11 @@ import de.nycode.nickplugin.model.Nickname
 
 interface NicknameProvider {
 
-    fun getNicknames(): List<Nickname>
-    fun saveNickname(nickname: Nickname)
+    val name: String
+
+    fun getNicknames(): Set<Nickname>
+    fun addNickname(nickname: Nickname)
+    fun deleteNickname(nickname: Nickname)
+    fun reloadNicknames()
 
 }

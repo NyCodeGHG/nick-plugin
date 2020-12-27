@@ -1,29 +1,25 @@
 package de.nycode.nickplugin.nicknames
 
 import de.nycode.nickplugin.NickPlugin
-import de.nycode.nickplugin.model.Nickname
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.json.Json
-import java.io.File
+import de.nycode.nickplugin.nicknames.providers.JsonFileProvider
 
 object NicknameLoader {
 
-    private var nicknames: List<Nickname>? = null
+    private val providers: List<NicknameProvider> = listOf(JsonFileProvider)
     private val logger = NickPlugin.instance.slF4JLogger
+    private val provider: NicknameProvider
 
-    fun load() {
+    init {
         val config = NickPlugin.instance.config
-        val nicknameFile =
-            File(NickPlugin.instance.dataFolder, config.getString("nicknames.filename") ?: "nicknames.json")
-
-        if (!nicknameFile.exists()) {
-            NickPlugin.instance.saveResource("nicknames.json", false)
+        var providerName = config.getString("nicknames.provider")
+        if (providerName == null) {
+            logger.warn("Could not find nickname provider name! Using json-file as fallback")
+            providerName = "json-file"
         }
 
-        val json = nicknameFile.readText()
-        nicknames = Json.decodeFromString<List<Nickname>>(json)
+        provider = providers.find { it.name.equals(providerName, ignoreCase = true) } ?: JsonFileProvider
     }
 
-    fun getNicknames() = nicknames
+    fun currentProvider() = provider
 
 }

@@ -88,7 +88,7 @@ class NickCommandExecutor : CommandExecutor {
             this.unnickPlayer(provider, sender)
             sender.sendMessage("Dein Nickname wurde entfernt")
         } else {
-            val nickname = NicknameLoader.getNicknames()?.randomOrNull() ?: return true
+            val nickname = NicknameLoader.currentProvider().getNicknames().randomOrNull() ?: return true
             this.nickPlayer(provider, sender, nickname)
             sender.sendMessage("Du wurdest genickt als: ${nickname.name}")
         }
