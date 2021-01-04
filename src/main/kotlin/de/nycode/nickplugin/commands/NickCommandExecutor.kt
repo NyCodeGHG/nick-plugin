@@ -20,6 +20,7 @@ import org.bukkit.entity.Player
 import org.bukkit.Bukkit
 
 import com.comphenix.protocol.wrappers.EnumWrappers.PlayerInfoAction
+import de.nycode.nickplugin.gui.NicknameInventory
 
 
 class NickCommandExecutor : CommandExecutor {
@@ -84,14 +85,25 @@ class NickCommandExecutor : CommandExecutor {
 
         val provider = DatabaseConnector.currentProvider()
 
-        if (provider.isPlayerNicked(sender.uniqueId)) {
-            this.unnickPlayer(provider, sender)
-            sender.sendMessage("Dein Nickname wurde entfernt")
-        } else {
-            val nickname = NicknameLoader.currentProvider().getNicknames().randomOrNull() ?: return true
-            this.nickPlayer(provider, sender, nickname)
-            sender.sendMessage("Du wurdest genickt als: ${nickname.name}")
+        if (args.isEmpty()) {
+            if (provider.isPlayerNicked(sender.uniqueId)) {
+                this.unnickPlayer(provider, sender)
+                sender.sendMessage("Dein Nickname wurde entfernt")
+            } else {
+                val nickname = NicknameLoader.currentProvider().getNicknames().randomOrNull() ?: return true
+                this.nickPlayer(provider, sender, nickname)
+                sender.sendMessage("Du wurdest genickt als: ${nickname.name}")
+            }
         }
+
+        if (args.size == 2) {
+
+            if (args[0].toLowerCase() == "config" && args[1].toLowerCase() == "gui") {
+                NicknameInventory.open(sender)
+            }
+
+        }
+
         return true
     }
 

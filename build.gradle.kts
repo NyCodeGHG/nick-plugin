@@ -37,6 +37,8 @@ dependencies {
     }
     implementation("io.papermc", "paperlib", "1.0.6")
     implementation("org.bstats", "bstats-bukkit", "1.8")
+    implementation("io.ktor", "ktor-client-apache", "1.5.0")
+    implementation("io.ktor", "ktor-client-gson", "1.5.0")
 }
 
 buildConfig {
@@ -75,7 +77,9 @@ tasks {
         val basePackage = "de.nycode.nickplugin.thirdparty"
         relocate("io.papermc.lib", "$basePackage.paperlib")
         relocate("me.lucko.commodore", "$basePackage.commodore")
-        relocate("kotlin", "$basePackage.kotlin")
+        relocate("kotlin", "$basePackage.kotlin") {
+            exclude("kotlin.jvm")
+        }
         relocate("kotlinx", "$basePackage.kotlinx")
         relocate("org.intellij", "$basePackage.intellij")
         relocate("org.jetbrains", "$basePackage.jetbrains")
