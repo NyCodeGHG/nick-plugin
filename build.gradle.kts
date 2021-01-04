@@ -19,6 +19,7 @@ version = "1.0.0"
 repositories {
     jcenter()
     maven(url = "https://papermc.io/repo/repository/maven-public/")
+    maven(url = "https://repo.codemc.org/repository/maven-public/")
     maven(url = "https://repo.dmulloy2.net/nexus/repository/public/")
     maven(url = "https://libraries.minecraft.net/")
 }
@@ -35,10 +36,7 @@ dependencies {
         exclude("com.mojang", "brigadier")
     }
     implementation("io.papermc", "paperlib", "1.0.6")
-    // Add your dependencies here
-    // Examples
-    // implementation("io.ktor", "ktor-client", "1.4.0") // Would be shaded into the final jar
-    // compileOnly("io.ktor", "ktor-client", "1.4.0") // Only used on compile time
+    implementation("org.bstats", "bstats-bukkit", "1.8")
 }
 
 buildConfig {
@@ -81,6 +79,7 @@ tasks {
         relocate("kotlinx", "$basePackage.kotlinx")
         relocate("org.intellij", "$basePackage.intellij")
         relocate("org.jetbrains", "$basePackage.jetbrains")
+        relocate("org.bstats", "$basePackage.bstats")
     }
 
     if (pluginDir != null) {

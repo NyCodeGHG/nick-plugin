@@ -6,6 +6,7 @@ import de.nycode.nickplugin.database.DatabaseConnector
 import de.nycode.nickplugin.nicknames.NicknameLoader
 import io.papermc.lib.PaperLib
 import me.lucko.commodore.CommodoreProvider
+import org.bstats.bukkit.Metrics
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 
@@ -22,6 +23,7 @@ class NickPlugin : JavaPlugin() {
     }
 
     override fun onEnable() {
+        checkMetrics()
         printSystemInformation()
         DatabaseConnector.connect()
         NicknameLoader.currentProvider().reloadNicknames()
@@ -40,6 +42,11 @@ class NickPlugin : JavaPlugin() {
         slF4JLogger.info("Minecraft Version: ${Bukkit.getMinecraftVersion()}")
         slF4JLogger.info("Server Brand: ${PaperLib.getEnvironment().name}")
         slF4JLogger.info("-------------------------------------------")
+    }
+
+    private fun checkMetrics() {
+        val pluginId = 9886
+        Metrics(this, pluginId)
     }
 
     private fun registerCommands() {
