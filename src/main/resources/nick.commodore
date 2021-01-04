@@ -1,0 +1,6 @@
+nick {
+    info;
+    config {
+        gui;
+    }
+}

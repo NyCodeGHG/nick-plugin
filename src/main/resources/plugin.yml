@@ -12,8 +12,15 @@ permissions:
   nick.use:
     default: false
     description: Allows the usage of the /nick command
+  nick.config:
+    default: false
+    description: Allows to configure the plugin with
 
 commands:
   nick:
     aliases:
       - nickname
+    permission: nick.use
+  nickconfig:
+    aliases: [nc]
+    permission: nick.config

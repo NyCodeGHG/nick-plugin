@@ -20,6 +20,7 @@ repositories {
     jcenter()
     maven(url = "https://papermc.io/repo/repository/maven-public/")
     maven(url = "https://repo.dmulloy2.net/nexus/repository/public/")
+    maven(url = "https://libraries.minecraft.net/")
 }
 
 val minecraft_version: String by project
@@ -28,7 +29,12 @@ dependencies {
     // PaperMC Dependency
     compileOnly("com.destroystokyo.paper", "paper-api", "$minecraft_version-R0.1-SNAPSHOT")
     compileOnly("com.comphenix.protocol", "ProtocolLib", "4.6.0-SNAPSHOT")
+    compileOnly("com.mojang", "brigadier", "1.0.17")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.0.1")
+    implementation("me.lucko", "commodore", "1.9") {
+        exclude("com.mojang", "brigadier")
+    }
+    implementation("io.papermc", "paperlib", "1.0.6")
     // Add your dependencies here
     // Examples
     // implementation("io.ktor", "ktor-client", "1.4.0") // Would be shaded into the final jar
@@ -67,6 +73,16 @@ properties.load(FileReader(File("local.properties")))
 val pluginDir: String? = properties.getProperty("pluginDir", null)
 
 tasks {
+    shadowJar {
+        val basePackage = "de.nycode.nickplugin.thirdparty"
+        relocate("io.papermc.lib", "$basePackage.paperlib")
+        relocate("me.lucko.commodore", "$basePackage.commodore")
+        relocate("kotlin", "$basePackage.kotlin")
+        relocate("kotlinx", "$basePackage.kotlinx")
+        relocate("org.intellij", "$basePackage.intellij")
+        relocate("org.jetbrains", "$basePackage.jetbrains")
+    }
+
     if (pluginDir != null) {
         register<Copy>("copyJarToBin") {
             from("build/libs/nick-plugin-1.0.0-all.jar")

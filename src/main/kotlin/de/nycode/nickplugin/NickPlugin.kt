@@ -1,8 +1,12 @@
 package de.nycode.nickplugin
 
 import de.nycode.nickplugin.commands.NickCommandExecutor
+import de.nycode.nickplugin.commands.brigadier.BrigadierCompletions
 import de.nycode.nickplugin.database.DatabaseConnector
 import de.nycode.nickplugin.nicknames.NicknameLoader
+import io.papermc.lib.PaperLib
+import me.lucko.commodore.CommodoreProvider
+import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 
 class NickPlugin : JavaPlugin() {
@@ -29,10 +33,23 @@ class NickPlugin : JavaPlugin() {
     }
 
     private fun printSystemInformation() {
-        slF4JLogger.info("Version: ${description.version}-${BuildConfig.GIT_COMMIT}@${BuildConfig.GIT_BRANCH}")
+        PaperLib.suggestPaper(this)
+        slF4JLogger.info("---------- Nick Plugin by NyCode ----------")
+        slF4JLogger.info("Current Version: ${description.version}-${BuildConfig.GIT_COMMIT}@${BuildConfig.GIT_BRANCH}")
+        slF4JLogger.info("Latest Version: Not available")
+        slF4JLogger.info("Minecraft Version: ${Bukkit.getMinecraftVersion()}")
+        slF4JLogger.info("Server Brand: ${PaperLib.getEnvironment().name}")
+        slF4JLogger.info("-------------------------------------------")
     }
 
     private fun registerCommands() {
-        getCommand("nick")?.setExecutor(NickCommandExecutor())
+        val nickCommand = getCommand("nick") ?: error("Couldn't get nick command! This should not happen!")
+        nickCommand.setExecutor(NickCommandExecutor())
+
+        if (CommodoreProvider.isSupported()) {
+            slF4JLogger.info("Detected 1.13+ Minecraft Version! Registering Brigadier Completions via Commodore!")
+            val commodore = CommodoreProvider.getCommodore(this)
+            BrigadierCompletions.registerCompletions(commodore, nickCommand)
+        }
     }
 }
