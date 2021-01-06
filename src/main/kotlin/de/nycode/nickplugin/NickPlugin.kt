@@ -3,6 +3,7 @@ package de.nycode.nickplugin
 import de.nycode.nickplugin.commands.NickCommandExecutor
 import de.nycode.nickplugin.commands.brigadier.BrigadierCompletions
 import de.nycode.nickplugin.database.DatabaseConnector
+import de.nycode.nickplugin.gui.NicknameInventory
 import de.nycode.nickplugin.nicknames.NicknameLoader
 import io.papermc.lib.PaperLib
 import me.lucko.commodore.CommodoreProvider
@@ -28,6 +29,7 @@ class NickPlugin : JavaPlugin() {
         DatabaseConnector.connect()
         NicknameLoader.currentProvider().reloadNicknames()
         registerCommands()
+        registerListener()
     }
 
     override fun onDisable() {
@@ -58,5 +60,10 @@ class NickPlugin : JavaPlugin() {
             val commodore = CommodoreProvider.getCommodore(this)
             BrigadierCompletions.registerCompletions(commodore, nickCommand)
         }
+    }
+
+    private fun registerListener() {
+        val pluginManager = Bukkit.getPluginManager()
+        pluginManager.registerEvents(NicknameInventory, this)
     }
 }
